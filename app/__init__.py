@@ -7,9 +7,13 @@ app = Flask(__name__)
 app.config.from_object(BaseConfig)
 
 db = SQLAlchemy(app)
-db.create_all()
+
+from app.auth.controller import auth
+app.register_blueprint(auth)
 
 
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404
+
+db.create_all()
