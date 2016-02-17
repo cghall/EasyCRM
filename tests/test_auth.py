@@ -22,3 +22,7 @@ class AuthTestCase(unittest.TestCase):
         queried_user = User.query.filter_by(name='test').first()
         assert queried_user.name == 'test'
         assert queried_user.password == 'mysecret'
+
+    def test_login_route(self):
+        response = self.app.get('/auth/login/')
+        assert response.status_code == 200

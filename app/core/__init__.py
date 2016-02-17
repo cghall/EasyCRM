@@ -1,1 +1,1 @@
-from models import Base
+from models import Base, Contact, Organisation
