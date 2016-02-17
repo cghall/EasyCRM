@@ -13,9 +13,4 @@ from app.core.controller import core
 app.register_blueprint(auth)
 app.register_blueprint(core)
 
-
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('404.html'), 404
-
 db.create_all()

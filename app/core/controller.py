@@ -11,7 +11,7 @@ core = Blueprint('core', __name__, template_folder='templates/core')
 def create_contact():
     form = CreateContact(request.form)
     if form.validate_on_submit():
-        contact = Contact(first_name=form.first_name, last_name=form.last_name, email=form.email)
+        contact = Contact(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data)
         db.session.add(contact)
         db.session.commit()
     return render_template('core/contact.html', form=form)
