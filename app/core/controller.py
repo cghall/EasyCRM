@@ -1,0 +1,17 @@
+from flask import Blueprint, request, render_template
+
+from app import db
+from app.core.forms import CreateContact
+from app.core.models import Contact
+
+core = Blueprint('core', __name__, template_folder='templates/core')
+
+
+@core.route('/contact/create', methods=['GET', 'POST'])
+def create_contact():
+    form = CreateContact(request.form)
+    if form.validate_on_submit():
+        contact = Contact(first_name=form.first_name, last_name=form.last_name, email=form.email)
+        db.session.add(contact)
+        db.session.commit()
+    return render_template('core/contact.html', form=form)

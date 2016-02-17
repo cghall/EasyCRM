@@ -9,7 +9,9 @@ app.config.from_object(BaseConfig)
 db = SQLAlchemy(app)
 
 from app.auth.controller import auth
+from app.core.controller import core
 app.register_blueprint(auth)
+app.register_blueprint(core)
 
 
 @app.errorhandler(404)
