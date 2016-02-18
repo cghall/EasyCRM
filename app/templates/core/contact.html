@@ -1,16 +1,4 @@
-{% macro render_field(field) %}
-  <dt>{{ field.label }}
-  <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
-{% endmacro %}
-
+{% extends "core/_helper.html" %}
 <h1>Create New {{ form.object }}</h1>
 <form method=post action="">
   <dl>
