@@ -1,3 +1,5 @@
+from sqlalchemy_utils import EmailType
+
 from app import db
 
 
@@ -14,7 +16,7 @@ class Contact(Base):
 
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
-    email = db.Column(db.String(60), nullable=False)
+    email = db.Column(EmailType, nullable=False)
     mobile = db.Column(db.Integer)
     role = db.Column(db.String(60))
     org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
