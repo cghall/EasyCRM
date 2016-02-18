@@ -42,5 +42,17 @@ class CoreTestCase(unittest.TestCase):
         self.assertEqual(c[0].last_name, data['last_name'])
         self.assertEqual(c[0].email, data['email'])
 
+    def test_create_contact_email_validation(self):
+        data = {
+            'first_name': 'test',
+            'last_name': 'contact',
+            'email': 'notanemailaddress'
+        }
+        rv = self.app.post('/contact/create', data=data)
+        self.assertEqual(rv.status_code, 200)
+        c = Contact.query.filter_by(email=data['email']).all()
+        self.assertEqual(len(c), 0)
+
+
 if __name__ == '__main__':
     unittest.main()
