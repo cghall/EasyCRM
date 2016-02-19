@@ -1,4 +1,4 @@
 {% from 'macros.html' import display_field %}
-    {% for field in fields %}
-      {{ display_field(record[field]) }}
+    {% for column in columns %}
+        {{ display_field(column, record) }}
     {% endfor %}

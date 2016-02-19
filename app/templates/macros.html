@@ -11,6 +11,6 @@
   </dd>
 {% endmacro %}
 
-{% macro display_field(field) %}
-  {{ field.label }} {{ field.data }}
+{% macro display_field(field, record) %}
+  <p><b>{{ field }}</b> {{ record[field] }}</p>
 {% endmacro %}

@@ -21,6 +21,6 @@ def create_contact():
 
 @core.route('/contact/<id>')
 def view_contact(id):
-    form = CreateContact(request.form)
     contact = Contact.query.filter_by(id=id).first()
-    return render_template('core/view_contact.html', record=contact, fields=form.data.keys())
+    columns = [el.name for el in Contact.__table__.columns]
+    return render_template('core/view_contact.html', columns=columns, record=contact)
