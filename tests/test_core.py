@@ -35,7 +35,7 @@ class CoreTestCase(unittest.TestCase):
             'email': 'example@test.co.uk'
         }
         rv = self.app.post('/contact/create', data=data)
-        self.assertEquals(rv.status_code, 200)
+        self.assertEquals(rv.status_code, 302)
         c = Contact.query.filter_by(email=data['email']).all()
         self.assertEqual(len(c), 1)
         self.assertEqual(c[0].first_name, data['first_name'])
@@ -53,6 +53,16 @@ class CoreTestCase(unittest.TestCase):
         c = Contact.query.filter_by(email=data['email']).all()
         self.assertEqual(len(c), 0)
 
+    def test_view_contact_route(self):
+        data = {
+            'first_name': 'test',
+            'last_name': 'contact',
+            'email': 'example@test.co.uk'
+        }
+        self.app.post('/contact/create', data=data)
+        c = Contact.query.filter_by(email=data['email']).first()
+        rv = self.app.get('/contact/{}'.format(c.id))
+        self.assertEquals(rv.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

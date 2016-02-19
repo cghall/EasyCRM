@@ -10,3 +10,7 @@
   {% endif %}
   </dd>
 {% endmacro %}
+
+{% macro display_field(field) %}
+  {{ field.label }} {{ field.data }}
+{% endmacro %}
