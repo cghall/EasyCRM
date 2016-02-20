@@ -13,6 +13,20 @@ class User(Base):
     _password = db.Column(db.String(192), nullable=False)
     first_name = db.Column(db.String(128), nullable=False)
     last_name = db.Column(db.String(128), nullable=False)
+    authenticated = db.Column(db.Boolean, default=False)
+    active = db.Column(db.Boolean, default=True)
+
+    def is_active(self):
+        return self.active
+
+    def get_id(self):
+        return self.username
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_anonymous(self):
+        return False
 
     @hybrid_property
     def password(self):
