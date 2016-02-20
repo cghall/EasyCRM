@@ -37,18 +37,20 @@ class AuthTestCase(unittest.TestCase):
         self.assertTrue(queried_user.is_correct_password('mysecret'))
 
     def test_valid_login_submit(self):
-        user = User(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+        user = User(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
         db.session.add(user)
         db.session.commit()
         form_data = {
-            'username': 'test@gmail.com',
+            'username': 'right@gmail.com',
             'password': 'mysecret'
         }
-        rv = self.app.post('/login/', data=form_data)
-        self.assertEquals(rv.status_code, 302)
+        rv = self.app.post('/login/', data=form_data, follow_redirects=True)
+        queried_user = User.query.filter_by(username=form_data['username']).first()
+        self.assertEquals(rv.status_code, 200)
+        self.assertTrue(queried_user.is_authenticated())
 
     def test_incorrect_password_display_message(self):
-        user = User(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+        user = User(username='wrong@gmail.com', password='mysecret', first_name='chris', last_name='hall')
         db.session.add(user)
         db.session.commit()
         form_data = {
@@ -58,7 +60,7 @@ class AuthTestCase(unittest.TestCase):
         rv = self.app.post('/login/', data=form_data, follow_redirects=True)
         self.assertEquals(rv.status_code, 200)
         print(rv.data)
-        self.assertTrue('Invalid username/password' in rv.data)
+        self.assertTrue('Invalid password' in rv.data)
 
     def test_login_route(self):
         response = self.app.get('/login/')
