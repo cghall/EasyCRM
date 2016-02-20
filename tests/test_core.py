@@ -19,6 +19,10 @@ class CoreTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+    def test_home_page_route(self):
+        rv = self.app.get('/')
+        self.assertEquals(rv.status_code, 200)
+
     def test_create_contact_route(self):
         rv = self.app.get('/contact/create')
         self.assertEquals(rv.status_code, 200)

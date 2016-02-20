@@ -7,6 +7,11 @@ from app.core.models import Contact
 core = Blueprint('core', __name__, template_folder='templates/core')
 
 
+@core.route('/')
+def home():
+    return render_template('core/home.html')
+
+
 @core.route('/contact/create', methods=['GET', 'POST'])
 def create_contact():
     form = CreateContact(request.form)
