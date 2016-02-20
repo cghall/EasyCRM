@@ -3,18 +3,21 @@ import unittest
 from app import app, db
 from config import TestConfig
 from app.auth import User
-from app.extensions import bcrypt
 
 
 class AuthTestCase(unittest.TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         app.config.from_object(TestConfig)
-        self.app = app.test_client()
         db.create_all()
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         db.session.remove()
         db.drop_all()
+
+    def setUp(self):
+        self.app = app.test_client()
 
     def test_add_user(self):
         user = User(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
@@ -31,7 +34,7 @@ class AuthTestCase(unittest.TestCase):
         db.session.add(user)
         db.session.commit()
         queried_user = User.query.filter_by(username='test@gmail.com').first()
-        self.assertTrue(bcrypt.check_password_hash(queried_user.password, 'mysecret'))
+        self.assertTrue(queried_user.is_correct_password('mysecret'))
 
     def test_login_route(self):
         response = self.app.get('/login/')
