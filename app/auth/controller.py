@@ -4,7 +4,7 @@ from app.auth.forms import LoginForm
 from app.auth.models import User
 
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, template_folder='templates/auth')
 
 
 @auth.route('/login/', methods=['GET', 'POST'])
