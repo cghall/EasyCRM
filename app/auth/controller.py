@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template
 from flask_login import login_user
 
 from app.auth.forms import LoginForm
@@ -8,9 +8,10 @@ from app import db
 
 auth = Blueprint('auth', __name__, template_folder='templates/auth')
 
+
 @login_manager.user_loader
-def load_user(id):
-    return User.query.filter(User.id == id).first()
+def load_user(user_id):
+    return User.query.filter(User.id == user_id).first()
 
 
 @auth.route('/login/', methods=['GET', 'POST'])

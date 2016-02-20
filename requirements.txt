@@ -5,6 +5,7 @@ decorator==4.0.9
 enum34==1.1.2
 Flask==0.10.1
 Flask-Bcrypt==0.7.1
+Flask-Login==0.3.2
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
 infinity==1.3
