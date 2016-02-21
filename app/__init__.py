@@ -1,19 +1,28 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
 from config import BaseConfig
 from app.extensions import bcrypt, login_manager
+from app.database import db
+from app.core import core as core_blueprint
+from app.auth import auth as auth_blueprint
 
-app = Flask(__name__)
-app.config.from_object(BaseConfig)
 
-db = SQLAlchemy(app)
-bcrypt.init_app(app)
-login_manager.init_app(app)
+def create_app(config=BaseConfig):
+    app = Flask(__name__)
+    app.config.from_object(config)
 
-from app.auth.controller import auth
-from app.core.controller import core
-app.register_blueprint(auth)
-app.register_blueprint(core)
+    register_extensions(app)
+    register_blueprints(app)
 
-db.create_all()
+    return app
+
+
+def register_extensions(app):
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    db.init_app(app)
+
+
+def register_blueprints(app):
+    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(core_blueprint)

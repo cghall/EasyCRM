@@ -4,9 +4,8 @@ from flask_login import login_user
 from app.auth.forms import LoginForm
 from app.auth.models import User
 from app.extensions import login_manager
+from . import auth
 from app import db
-
-auth = Blueprint('auth', __name__, template_folder='templates/auth')
 
 
 @login_manager.user_loader
@@ -22,4 +21,5 @@ def login():
         db.session.add(form.user)
         db.session.commit()
         login_user(form.user)
+        print 'logged in'
     return render_template('auth/login.html', form=form)

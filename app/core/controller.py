@@ -1,18 +1,20 @@
 from flask import Blueprint, request, render_template, url_for, redirect
+from flask_login import login_required
 
 from app import db
 from app.core.forms import CreateContact
 from app.core.models import Contact
-
-core = Blueprint('core', __name__, template_folder='templates/core')
+from . import core
 
 
 @core.route('/')
+@login_required
 def home():
     return render_template('core/home.html')
 
 
 @core.route('/contact/create', methods=['GET', 'POST'])
+@login_required
 def create_contact():
     form = CreateContact(request.form)
     if request.method == 'POST':
@@ -25,6 +27,7 @@ def create_contact():
 
 
 @core.route('/contact/<id>')
+@login_required
 def view_contact(id):
     contact = Contact.query.filter_by(id=id).first()
     columns = [el.name for el in Contact.__table__.columns]
