@@ -15,10 +15,15 @@ class BaseConfig(object):
 
 
 class TestConfig(BaseConfig):
-    """Configuration for unit testing"""
+    """Configuration for general testing"""
     TESTING = True
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test.db')
     WTF_CSRF_ENABLED = False
     LOGIN_DISABLED = True
     BCRYPT_LOG_ROUNDS = 4
+
+
+class AuthTestConfig(TestConfig):
+    """For testing authentication we want to require logins to check validation works"""
+    LOGIN_DISABLED = False

@@ -1,9 +1,11 @@
 import unittest
 
+from flask import url_for
 
 from config import TestConfig
 from app import create_app
 from app.database import db
+from app.auth import User
 from app.core import Contact
 
 
@@ -22,8 +24,17 @@ class CoreTestCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_home_page_route(self):
-        rv = self.client.get('/')
-        self.assertEquals(rv.status_code, 200)
+         with self.client:
+            user = User(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+            db.session.add(user)
+            db.session.commit()
+            form_data = {
+                'username': 'right@gmail.com',
+                'password': 'mysecret'
+            }
+            self.client.post(url_for('auth.login'), data=form_data, follow_redirects=True)
+            rv = self.client.get('/')
+            self.assertEquals(rv.status_code, 200)
 
     def test_create_contact_route(self):
         rv = self.client.get('/contact/create')
