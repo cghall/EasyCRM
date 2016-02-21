@@ -1,12 +1,11 @@
 from sqlalchemy.ext.hybrid import hybrid_property
-from flask_login import UserMixin
 
 from app.database import db
 from app.core import Base
 from app.extensions import bcrypt
 
 
-class User(Base, UserMixin):
+class User(Base):
 
     __tablename__ = 'user'
 

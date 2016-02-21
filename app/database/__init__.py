@@ -8,6 +8,6 @@ def populate_db():
     """
     Adds fake data to the database.
     """
-    admin = User(username='test@gmail.com', password='kkwi5140', first_name='chris', last_name='hall')
+    admin = User(username='test@gmail.com', password='shh', first_name='chris', last_name='hall')
     db.session.add(admin)
     db.session.commit()

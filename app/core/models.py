@@ -19,18 +19,17 @@ class Contact(Base):
     email = db.Column(EmailType, nullable=False)
     mobile = db.Column(db.Integer)
     role = db.Column(db.String(60))
-    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
 
-    def __init__(self, first_name=None, last_name=None, email=None):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
+    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class Organisation(Base):
 
-    org_name = db.Column(db.String(100), nullable=False)
-    contacts = db.relationship('Contact', backref='organisation')
+    name = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.String(80))
+    address = db.Column(db.Text(180))
 
-    def __init__(self, org_name=None):
-        self.org_name = org_name
+    contacts = db.relationship('Contact', backref='organisation')
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+
