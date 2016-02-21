@@ -18,7 +18,8 @@ def create_contact():
     form = CreateContact(request.form)
     if request.method == 'POST':
         if form.validate():
-            contact = Contact.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data)
+            print form.data
+            contact = Contact.create(**form.data)
             return redirect(url_for('core.view_contact', id=contact.id))
     return render_template('core/create_contact.html', form=form, fields=form.data.keys())
 
@@ -37,6 +38,13 @@ def create_organisation():
     form = CreateOrganisation(request.form)
     if request.method == 'POST':
         if form.validate():
-            org = Organisation.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data)
-            return redirect(url_for('core.view_contact', id=org.id))
-    return render_template('core/create_contact.html', form=form, fields=form.data.keys())
+            org = Organisation.create(name=form.name.data, type=form.type.data, address=form.address.data)
+            return redirect(url_for('core.view_organisation', id=org.id))
+    return render_template('core/create_organisation.html', form=form)
+
+
+@core.route('/organisation/<id>')
+@login_required
+def view_organisation(id):
+    org = Organisation.query.filter_by(id=id).first()
+    return render_template('core/view_organisation.html', organisation=org)

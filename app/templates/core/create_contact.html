@@ -1,10 +1,13 @@
 {% from 'macros.html' import render_field %}
-<h1>Create New {{ form.object }}</h1>
+<h1>Create New Contact</h1>
 <form method=post action="">
   <dl>
-    {% for field in fields %}
-      {{ render_field(form[field]) }}
-    {% endfor %}
+    {{ render_field(form.first_name) }}
+    {{ render_field(form.last_name) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.role) }}
+    {{ render_field(form.mobile) }}
+    {{ render_field(form.org_id) }}
   </dl>
   <p><input type=submit value=Create>
 </form>

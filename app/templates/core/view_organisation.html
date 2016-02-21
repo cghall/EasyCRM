@@ -1,0 +1,23 @@
+{% from 'macros.html' import display_field %}
+
+<h1>Organisation: {{ organisation.name }} </h1>
+
+{{ display_field('name', organisation) }}
+{{ display_field('type', organisation) }}
+{{ display_field('address', organisation) }}
+
+<h3>Contacts</h3>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    {% for contact in organisation.contacts %}
+    <tr>
+        <td>{{ contact.first_name }} {{ contact.last_name }}</td>
+        <td>{{ contact.email }}</td>
+        <td>{{ contact.role }}</td>
+    </tr>
+    {% endfor %}
+</table>

@@ -69,6 +69,25 @@ class CoreTestCase(unittest.TestCase):
         rv = self.client.get('/contact/{}'.format(c.id))
         self.assertEquals(rv.status_code, 200)
 
+    def test_create_organisation_route(self):
+        rv = self.client.get('/organisation/create')
+        self.assertEquals(rv.status_code, 200)
+
+    def test_create_organisation_valid_form(self):
+        data = {
+            'name': 'test charity',
+            'type': 'charity',
+            'address': '1 My Road, London'
+        }
+        rv = self.client.post('/organisation/create', data=data)
+        print rv.data
+        self.assertEquals(rv.status_code, 302)
+        o = Organisation.query.filter_by(name=data['name']).all()
+        self.assertEqual(len(o), 1)
+        self.assertEqual(o[0].name, data['name'])
+        self.assertEqual(o[0].type, data['type'])
+        self.assertEqual(o[0].address, data['address'])
+
     def test_contact_organisation_relationship(self):
         test_org_name = 'Test Organisation'
         test_org = Organisation.create(name=test_org_name, type='charity')
