@@ -25,6 +25,7 @@ class User(Base):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
+        return u
 
     def is_active(self):
         return self.active

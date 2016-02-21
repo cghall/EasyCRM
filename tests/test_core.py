@@ -71,10 +71,9 @@ class CoreTestCase(unittest.TestCase):
 
     def test_contact_organisation_relationship(self):
         test_org_name = 'Test Organisation'
-        Organisation.create(name=test_org_name)
-        test_org = Organisation.query.filter_by(name=test_org_name).first()
-        Contact.create(first_name='test', last_name='contact', email='example@test.co.uk', org_id=test_org.id)
-        test_contact = Contact.query.filter_by(email='example@test.co.uk').first()
+        test_org = Organisation.create(name=test_org_name, type='charity')
+        test_contact = Contact.create(first_name='test', last_name='contact', email='example@test.co.uk',
+                                      org_id=test_org.id)
         self.assertEquals(test_org.id, test_contact.org_id)
         self.assertEquals(len(test_org.contacts), 1)
         self.assertEquals(test_contact.organisation.name, test_org_name)

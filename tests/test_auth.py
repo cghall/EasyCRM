@@ -28,26 +28,24 @@ class AuthTestCase(unittest.TestCase):
         self.assertEquals(rv.status_code, 200)
 
     def test_add_user_with_password_hashing(self):
-        User.create(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
-        queried_user = User.query.filter_by(username='test@gmail.com').first()
-        self.assertEqual(queried_user.username, 'test@gmail.com')
-        self.assertNotEqual(queried_user.password, 'mysecret', 'Password not hashed')
-        self.assertTrue(queried_user.is_correct_password('mysecret'))
-        self.assertEqual(queried_user.first_name, 'chris')
-        self.assertEqual(queried_user.last_name, 'hall')
+        user = User.create(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+        self.assertEqual(user.username, 'test@gmail.com')
+        self.assertNotEqual(user.password, 'mysecret', 'Password not hashed')
+        self.assertTrue(user.is_correct_password('mysecret'))
+        self.assertEqual(user.first_name, 'chris')
+        self.assertEqual(user.last_name, 'hall')
 
     def test_valid_login_submit(self):
         with self.client:
-            User.create(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+            user = User.create(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
             form_data = {
                 'username': 'right@gmail.com',
                 'password': 'mysecret'
             }
             rv = self.client.post(url_for('auth.login'), data=form_data, follow_redirects=True)
-            queried_user = User.query.filter_by(username=form_data['username']).first()
             self.assertEquals(rv.status_code, 200)
-            self.assertTrue(queried_user.is_authenticated())
-            self.assertEquals(current_user.id, queried_user.id)
+            self.assertTrue(user.is_authenticated())
+            self.assertEquals(current_user.id, user.id)
             rv = self.client.get('contact/create')
             self.assertEquals(rv.status_code, 200)
 

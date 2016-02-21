@@ -34,12 +34,18 @@ class Contact(Base):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
+        return c
 
 
 class Organisation(Base):
+    TYPE_CHOICE = [
+        ('charity', 'Charity'),
+        ('funder', 'Funder'),
+        ('other', 'Other')
+    ]
 
     name = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(80))
+    type = db.Column(ChoiceType(TYPE_CHOICE), nullable=False)
     address = db.Column(db.Text(180))
 
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -55,6 +61,7 @@ class Organisation(Base):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
+        return o
 
 
 class Project(Base):
