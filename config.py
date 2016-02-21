@@ -25,5 +25,5 @@ class TestConfig(BaseConfig):
 
 
 class AuthTestConfig(TestConfig):
-    """For testing authentication we want to require logins to check validation works"""
+    """For testing authentication we want to require login to check validation works"""
     LOGIN_DISABLED = False

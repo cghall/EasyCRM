@@ -28,9 +28,7 @@ class AuthTestCase(unittest.TestCase):
         self.assertEquals(rv.status_code, 200)
 
     def test_add_user_with_password_hashing(self):
-        user = User(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
-        db.session.add(user)
-        db.session.commit()
+        User.create(username='test@gmail.com', password='mysecret', first_name='chris', last_name='hall')
         queried_user = User.query.filter_by(username='test@gmail.com').first()
         self.assertEqual(queried_user.username, 'test@gmail.com')
         self.assertNotEqual(queried_user.password, 'mysecret', 'Password not hashed')
@@ -40,9 +38,7 @@ class AuthTestCase(unittest.TestCase):
 
     def test_valid_login_submit(self):
         with self.client:
-            user = User(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
-            db.session.add(user)
-            db.session.commit()
+            User.create(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
             form_data = {
                 'username': 'right@gmail.com',
                 'password': 'mysecret'
@@ -56,9 +52,7 @@ class AuthTestCase(unittest.TestCase):
             self.assertEquals(rv.status_code, 200)
 
     def test_incorrect_password_display_message(self):
-        user = User(username='wrong@gmail.com', password='mysecret', first_name='chris', last_name='hall')
-        db.session.add(user)
-        db.session.commit()
+        User.create(username='wrong@gmail.com', password='mysecret', first_name='chris', last_name='hall')
         form_data = {
             'username': 'wrong@gmail.com',
             'password': 'wrongpassword'

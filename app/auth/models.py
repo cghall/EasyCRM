@@ -1,4 +1,5 @@
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.exc import IntegrityError
 
 from app.database import db
 from app.core import Base
@@ -38,3 +39,13 @@ class User(Base):
 
     def is_correct_password(self, plaintext):
         return bcrypt.check_password_hash(self._password, plaintext)
+
+    @staticmethod
+    def create(**kwargs):
+        u = User(**kwargs)
+        db.session.add(u)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+
