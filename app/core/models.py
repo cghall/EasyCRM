@@ -1,4 +1,5 @@
-from sqlalchemy_utils import EmailType
+from sqlalchemy_utils import EmailType, ChoiceType
+from sqlalchemy.exc import IntegrityError
 
 from app.database import db
 
@@ -23,6 +24,17 @@ class Contact(Base):
     org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    activities = db.relationship('Activity', backref='contact')
+
+    @staticmethod
+    def create(**kwargs):
+        c = Contact(**kwargs)
+        db.session.add(c)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+
 
 class Organisation(Base):
 
@@ -30,6 +42,54 @@ class Organisation(Base):
     type = db.Column(db.String(80))
     address = db.Column(db.Text(180))
 
-    contacts = db.relationship('Contact', backref='organisation')
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    contacts = db.relationship('Contact', backref='organisation')
+    activities = db.relationship('Activity', backref='contact_lookup')
+
+    @staticmethod
+    def create(**kwargs):
+        o = Organisation(**kwargs)
+        db.session.add(o)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+
+
+class Project(Base):
+    STATUS_CHOICE = [
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed')
+    ]
+
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    status = db.Column(ChoiceType(STATUS_CHOICE), nullable=False)
+
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
+    contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
+
+    activities = db.relationship('Activity', backref='project')
+    invoices = db.relationship('Invoice', backref='project')
+
+
+class Invoice(Base):
+
+    issue_date = db.Column(db.Date)
+    amount = db.Column(db.Integer, nullable=False)
+    paid = db.Column(db.Boolean, default=False)
+
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+
+class Activity(Base):
+
+    subject = db.Column(db.String(100), nullable=False)
+    detail = db.Column(db.Text)
+
+    contact_id = db.Column(db.Integer, db.ForeignKey('contact.id'))
+    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))

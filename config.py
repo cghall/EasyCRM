@@ -19,6 +19,7 @@ class TestConfig(BaseConfig):
     TESTING = True
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
     LOGIN_DISABLED = True
     BCRYPT_LOG_ROUNDS = 4

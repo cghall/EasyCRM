@@ -17,6 +17,15 @@ class User(Base):
     authenticated = db.Column(db.Boolean, default=False)
     active = db.Column(db.Boolean, default=True)
 
+    @staticmethod
+    def create(**kwargs):
+        u = User(**kwargs)
+        db.session.add(u)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+
     def is_active(self):
         return self.active
 
@@ -39,13 +48,3 @@ class User(Base):
 
     def is_correct_password(self, plaintext):
         return bcrypt.check_password_hash(self._password, plaintext)
-
-    @staticmethod
-    def create(**kwargs):
-        u = User(**kwargs)
-        db.session.add(u)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-
