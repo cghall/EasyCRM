@@ -20,3 +20,4 @@ class LoginForm(Form):
         if not user.is_correct_password(form.password.data):
             raise ValidationError("Invalid password")
         form.user = user
+        return True

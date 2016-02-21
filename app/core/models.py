@@ -1,6 +1,6 @@
 from sqlalchemy_utils import EmailType
 
-from app import db
+from app.database import db
 
 
 class Base(db.Model):

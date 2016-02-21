@@ -1,16 +1,16 @@
-from flask import Blueprint, request, render_template
-from flask_login import login_user
+from flask import request, render_template, redirect, url_for
+from flask_login import login_user, current_user, login_required
 
 from app.auth.forms import LoginForm
 from app.auth.models import User
 from app.extensions import login_manager
 from . import auth
-from app import db
+from app.database import db
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter(User.id == user_id).first()
+    return User.query.filter_by(username=user_id).first()
 
 
 @auth.route('/login/', methods=['GET', 'POST'])
@@ -21,5 +21,8 @@ def login():
         db.session.add(form.user)
         db.session.commit()
         login_user(form.user)
-        print 'logged in'
+        print current_user
+        print current_user.is_authenticated()
+        return redirect(url_for('core.home'))
     return render_template('auth/login.html', form=form)
+

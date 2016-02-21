@@ -1,6 +1,7 @@
 import unittest
 
 from flask import url_for
+from flask_login import current_user
 
 from config import TestConfig
 from app.auth import User
@@ -44,17 +45,19 @@ class AuthTestCase(unittest.TestCase):
         self.assertTrue(queried_user.is_correct_password('mysecret'))
 
     def test_valid_login_submit(self):
-        user = User(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
-        db.session.add(user)
-        db.session.commit()
-        form_data = {
-            'username': 'right@gmail.com',
-            'password': 'mysecret'
-        }
-        rv = self.client.post(url_for('auth.login'), data=form_data, follow_redirects=True)
-        queried_user = User.query.filter_by(username=form_data['username']).first()
-        self.assertEquals(rv.status_code, 200)
-        self.assertTrue(queried_user.is_authenticated())
+        with self.client:
+            user = User(username='right@gmail.com', password='mysecret', first_name='chris', last_name='hall')
+            db.session.add(user)
+            db.session.commit()
+            form_data = {
+                'username': 'right@gmail.com',
+                'password': 'mysecret'
+            }
+            rv = self.client.post(url_for('auth.login'), data=form_data, follow_redirects=True)
+            print current_user
+            queried_user = User.query.filter_by(username=form_data['username']).first()
+            self.assertEquals(rv.status_code, 200)
+            self.assertTrue(queried_user.is_authenticated())
 
     def test_incorrect_password_display_message(self):
         user = User(username='wrong@gmail.com', password='mysecret', first_name='chris', last_name='hall')
@@ -66,5 +69,4 @@ class AuthTestCase(unittest.TestCase):
         }
         rv = self.client.post(url_for('auth.login'), data=form_data, follow_redirects=True)
         self.assertEquals(rv.status_code, 200)
-        print rv.data
         self.assertTrue('Invalid password' in rv.data)

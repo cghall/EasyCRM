@@ -1,7 +1,7 @@
-from flask import Blueprint, request, render_template, url_for, redirect
+from flask import request, render_template, url_for, redirect
 from flask_login import login_required
 
-from app import db
+from app.database import db
 from app.core.forms import CreateContact
 from app.core.models import Contact
 from . import core
