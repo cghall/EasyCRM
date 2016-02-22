@@ -34,10 +34,17 @@ class CoreTestCase(unittest.TestCase):
         self.assertEquals(rv.status_code, 200)
 
     def test_create_contact_valid_form(self):
+        org_data = {
+            'name': 'test charity',
+            'type': 'charity',
+            'address': '1 My Road, London'
+        }
+        o = Organisation.create(**org_data)
         data = {
             'first_name': 'test',
             'last_name': 'contact',
-            'email': 'example@test.co.uk'
+            'email': 'example@test.co.uk',
+            'org_id': o.id
         }
         rv = self.client.post('/contact/create', data=data)
         self.assertEquals(rv.status_code, 302)
@@ -59,13 +66,20 @@ class CoreTestCase(unittest.TestCase):
         self.assertEqual(len(c), 0)
 
     def test_view_contact_route(self):
-        data = {
+        org_data = {
+            'name': 'test charity',
+            'type': 'charity',
+            'address': '1 My Road, London'
+        }
+        o = Organisation.create(**org_data)
+        con_data = {
             'first_name': 'test',
             'last_name': 'contact',
-            'email': 'example@test.co.uk'
+            'email': 'example@test.co.uk',
+            'org_id': o.id
         }
-        self.client.post('/contact/create', data=data)
-        c = Contact.query.filter_by(email=data['email']).first()
+        self.client.post('/contact/create', data=con_data)
+        c = Contact.query.filter_by(email=con_data['email']).first()
         rv = self.client.get('/contact/{}'.format(c.id))
         self.assertEquals(rv.status_code, 200)
 
@@ -80,7 +94,6 @@ class CoreTestCase(unittest.TestCase):
             'address': '1 My Road, London'
         }
         rv = self.client.post('/organisation/create', data=data)
-        print rv.data
         self.assertEquals(rv.status_code, 302)
         o = Organisation.query.filter_by(name=data['name']).all()
         self.assertEqual(len(o), 1)

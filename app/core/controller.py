@@ -18,16 +18,16 @@ def create_contact():
     form = CreateContact(request.form)
     if request.method == 'POST':
         if form.validate():
-            print form.data
+            form.org_id.data = form.org_id.data.id
             contact = Contact.create(**form.data)
-            return redirect(url_for('core.view_contact', id=contact.id))
-    return render_template('core/create_contact.html', form=form, fields=form.data.keys())
+            return redirect(url_for('core.view_contact', con_id=contact.id))
+    return render_template('core/create_contact.html', form=form)
 
 
-@core.route('/contact/<id>')
+@core.route('/contact/<con_id>')
 @login_required
-def view_contact(id):
-    contact = Contact.query.filter_by(id=id).first()
+def view_contact(con_id):
+    contact = Contact.query.filter_by(id=con_id).first()
     columns = [el.name for el in Contact.__table__.columns]
     return render_template('core/view_contact.html', columns=columns, record=contact)
 
@@ -39,12 +39,12 @@ def create_organisation():
     if request.method == 'POST':
         if form.validate():
             org = Organisation.create(name=form.name.data, type=form.type.data, address=form.address.data)
-            return redirect(url_for('core.view_organisation', id=org.id))
+            return redirect(url_for('core.view_organisation', org_id=org.id))
     return render_template('core/create_organisation.html', form=form)
 
 
-@core.route('/organisation/<id>')
+@core.route('/organisation/<org_id>')
 @login_required
-def view_organisation(id):
-    org = Organisation.query.filter_by(id=id).first()
+def view_organisation(org_id):
+    org = Organisation.query.filter_by(id=org_id).first()
     return render_template('core/view_organisation.html', organisation=org)

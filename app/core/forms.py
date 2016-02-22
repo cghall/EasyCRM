@@ -1,9 +1,11 @@
-from wtforms_alchemy import ModelForm, ModelFormField
-from wtforms import StringField, SelectField, TextAreaField
-from wtforms.validators import DataRequired
-from flask_wtf import Form
+from wtforms_alchemy import ModelForm
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
 from app.core.models import Contact, Organisation
+
+
+def available_organisations():
+    return Organisation.query.all()
 
 
 class CreateOrganisation(ModelForm):
@@ -14,10 +16,5 @@ class CreateOrganisation(ModelForm):
 class CreateContact(ModelForm):
     class Meta:
         model = Contact
-        include = ['org_id']
 
-    # organisation = ModelFormField(CreateOrganisation)
-
-    # name = StringField('Organisation Name', [DataRequired()])
-    # type = SelectField('Organisation Type', choices=Organisation.TYPE_CHOICE)
-    # address = TextAreaField('Address')
+    org_id = QuerySelectField('Organisation', query_factory=available_organisations, get_label='name')

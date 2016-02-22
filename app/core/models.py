@@ -15,13 +15,13 @@ class Base(db.Model):
 
 class Contact(Base):
 
-    first_name = db.Column(db.String(60), nullable=False)
-    last_name = db.Column(db.String(60), nullable=False)
-    email = db.Column(EmailType, nullable=False)
-    mobile = db.Column(db.Integer)
-    role = db.Column(db.String(60))
-
-    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'))
+    """User input fields - these fields can be set by user and are included in forms"""
+    first_name = db.Column(db.String(60), nullable=False, info={"label": "First Name"})
+    last_name = db.Column(db.String(60), nullable=False, info={"label": "Last Name"})
+    email = db.Column(EmailType, nullable=False, info={"label": "Email"})
+    mobile = db.Column(db.Integer, info={"label": "Mobile"})
+    role = db.Column(db.String(60), info={"label": "Role"})
+    org_id = db.Column(db.Integer, db.ForeignKey('organisation.id'), info={"label": "Organisation"})
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     activities = db.relationship('Activity', backref='contact')
